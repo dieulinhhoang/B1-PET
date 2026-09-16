@@ -153,6 +153,31 @@ pre.sample{white-space:pre-wrap;font-family:"Be Vietnam Pro",sans-serif;font-siz
 .empty{text-align:center;padding:34px 10px}
 .empty p{font-size:17px;font-weight:600;margin:0 0 14px}
 .srch{margin-bottom:16px}
+.spk{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;padding:0;
+  border-radius:50%;border:1px solid var(--rule);background:var(--paper);cursor:pointer;font-size:15px;
+  flex:none;line-height:1;vertical-align:middle}
+.spk:hover{background:var(--marker-dim)}
+.spk:active{transform:scale(.93)}
+.sleepopts{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.sleepchk{display:flex;align-items:center;gap:8px;font-size:15px}
+.sleepchk input{width:18px;height:18px}
+.sleeprow{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:18px;font-size:14px}
+.sleeprow label{display:block;color:var(--ink-soft);margin-bottom:4px}
+.sleeprow select{font:inherit;font-size:15px;padding:8px 10px;border-radius:var(--radius);border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+.sleepstage{background:var(--ink);color:#fff;border-radius:var(--radius);padding:28px 20px;text-align:center;min-height:160px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.sleepstage .sleepvi{font-size:16px;color:#B9C2D6;margin:0}
+.sleepstage .sleepen{font-size:20px;font-weight:600;margin:0}
+.sleepstage .hint{color:#8E9AB4}
+.sleepstage .row{justify-content:center;margin-top:8px}
+.muted{color:var(--ink-soft);font-size:14.5px;text-align:center;padding:20px 0}
+.kwlist{display:flex;flex-direction:column;gap:10px}
+.kwcard{padding:14px 16px}
+.kwhead{font-size:13.5px;color:var(--ink-soft);margin:0 0 4px}
+.kwhead b{color:var(--ink);font-size:15.5px}
+.kwrule{font-size:15px;font-weight:600;margin:2px 0 8px}
+.kwex{font-size:14px;color:var(--ink-soft);margin:0 0 3px}
+.kwans{font-size:14.5px;margin:0}
+.kwans b{color:var(--green)}
 .hits{font-size:13px;color:var(--ink-soft);margin-bottom:10px}
 mark{background:var(--marker);color:inherit;padding:0 2px}
 .bar{height:6px;background:var(--rule);border-radius:99px;overflow:hidden;margin:12px 0 0}
@@ -202,6 +227,60 @@ tips: [
   {sk:"Speaking", p:"Part 1", items:["Giám khảo sẽ bảo bạn đánh vần họ của mình. Tập trước cho chắc.","Phase 2 đừng trả lời một từ: cho ví dụ hoặc lý do.","Không nghe rõ thì xin giám khảo nhắc lại, đừng đoán."]},
   {sk:"Speaking", p:"Part 2", items:["Thể hiện quan tâm tới điều bạn cùng thi nói và phản hồi lại.","Nhìn và nói với bạn cùng thi, không phải với giám khảo.","Cuối phần phải cùng nhau chốt một quyết định chung."]},
   {sk:"Speaking", p:"Part 3 & 4", items:["Part 3: tả ai, ở đâu, đang làm gì. Thêm quần áo họ mặc và đồ vật thấy được.","Học cách tả vị trí: on the left, on the right, above, below...","Không biết từ nào thì bỏ qua, tập trung vào thứ mình biết.","Part 4: giám khảo chỉ nêu chủ đề rồi im. Hai thí sinh tự hỏi đáp với nhau.","Hỏi lại bạn cùng thi và tỏ ra hứng thú với câu trả lời.","Đừng sợ sai, cứ nói tiếp."]}
+],
+w1kw: [
+  {kw:"enough", rule:"tính từ/trạng từ + enough + (for sb) + to V", ex:"Tom is very young. He can't drive.", ans:"Tom isn't old enough to drive."},
+  {kw:"too", rule:"too + tính từ/trạng từ + (for sb) + to V", ex:"The coffee was very hot. She couldn't drink it.", ans:"The coffee was too hot for her to drink."},
+  {kw:"so...that", rule:"so + tính từ/trạng từ + that + mệnh đề", ex:"The film was very boring. We left early.", ans:"The film was so boring that we left early."},
+  {kw:"such...that", rule:"such + (a/an) + tính từ + danh từ + that + mệnh đề", ex:"It was a very boring film. We left early.", ans:"It was such a boring film that we left early."},
+  {kw:"comparative (-er/more)", rule:"tính từ đuôi -er + than / more + tính từ dài + than", ex:"My bag is big. Your bag is bigger... wait: My bag is bigger than yours.", ans:"Her house is more expensive than mine."},
+  {kw:"as...as", rule:"as + tính từ/trạng từ + as (so sánh ngang bằng)", ex:"John is 20. Mary is 20 too.", ans:"John is as old as Mary."},
+  {kw:"not as...as", rule:"not as + tính từ + as (kém hơn)", ex:"My car is not very fast. Your car is faster.", ans:"My car isn't as fast as yours."},
+  {kw:"used to", rule:"used to + V (thói quen/tình trạng trong QUÁ KHỨ, nay không còn)", ex:"I lived in Hanoi when I was young, but I don't now.", ans:"I used to live in Hanoi."},
+  {kw:"be/get used to", rule:"be/get used to + Ving (đã quen / đang quen với việc gì)", ex:"She has lived in London for years so it's normal for her now.", ans:"She is used to living in London."},
+  {kw:"would rather", rule:"would rather + V (nguyên mẫu, không to) — thích làm gì hơn", ex:"I prefer staying at home to going out tonight.", ans:"I would rather stay at home than go out tonight."},
+  {kw:"prefer", rule:"prefer + Ving/N + to + Ving/N", ex:"I like tea more than coffee.", ans:"I prefer tea to coffee."},
+  {kw:"had better", rule:"had better + V (nguyên mẫu) — lời khuyên nên làm ngay", ex:"I think it's a good idea for you to leave now.", ans:"You had better leave now."},
+  {kw:"must / have to", rule:"must/have to + V — bắt buộc, cần thiết", ex:"It is necessary for you to wear a helmet.", ans:"You must wear a helmet."},
+  {kw:"don't have to / needn't", rule:"don't have to / needn't + V — KHÔNG bắt buộc (không phải không được)", ex:"It isn't necessary for you to come.", ans:"You don't have to come."},
+  {kw:"mustn't", rule:"mustn't + V — bị CẤM, không được phép", ex:"It is forbidden to smoke here.", ans:"You mustn't smoke here."},
+  {kw:"since", rule:"have/has + V3 + since + mốc thời gian (điểm bắt đầu)", ex:"She moved here in 2018 and she still lives here.", ans:"She has lived here since 2018."},
+  {kw:"for", rule:"have/has + V3 + for + khoảng thời gian", ex:"She moved here 5 years ago and still lives here.", ans:"She has lived here for 5 years."},
+  {kw:"ago", rule:"quá khứ đơn + ... + ago (mốc tính từ hiện tại lùi về)", ex:"It is now 2024. She started this job in 2020.", ans:"She started this job 4 years ago."},
+  {kw:"although / though", rule:"Although/Though + mệnh đề (có đủ S+V), không dùng với danh từ", ex:"It was raining. We still went out.", ans:"Although it was raining, we still went out."},
+  {kw:"despite / in spite of", rule:"Despite/In spite of + Ving/danh từ (KHÔNG dùng mệnh đề)", ex:"It was raining. We still went out.", ans:"Despite the rain, we still went out."},
+  {kw:"because", rule:"because + mệnh đề (có S+V)", ex:"We stayed at home. The weather was bad.", ans:"We stayed at home because the weather was bad."},
+  {kw:"because of", rule:"because of + Ving/danh từ", ex:"We stayed at home. The weather was bad.", ans:"We stayed at home because of the bad weather."},
+  {kw:"unless", rule:"unless = if...not — mệnh đề điều kiện phủ định", ex:"If you don't hurry, you will miss the bus.", ans:"Unless you hurry, you will miss the bus."},
+  {kw:"wish + quá khứ đơn", rule:"wish + S + V-ed/were — ước hiện tại (trái ngược sự thật hiện tại)", ex:"I don't have a car. I wish...", ans:"I wish I had a car."},
+  {kw:"wish + had + V3", rule:"wish + S + had + V3 — ước quá khứ (tiếc nuối chuyện đã qua)", ex:"I didn't study hard. I wish...", ans:"I wish I had studied harder."},
+  {kw:"wish + would", rule:"wish + S + would + V — mong ai đó thay đổi hành động (thường phàn nàn)", ex:"I want you to stop making noise.", ans:"I wish you would stop making noise."},
+  {kw:"passive voice (be + V3)", rule:"Đổi câu chủ động → bị động: O + be + V3 + (by S)", ex:"They built this house in 1990.", ans:"This house was built in 1990."},
+  {kw:"reported speech (say/tell)", rule:"Lùi thì 1 bậc, đổi đại từ/trạng từ chỉ thời gian-nơi chốn phù hợp", ex:"Direct: \"I am tired,\" she said.", ans:"She said (that) she was tired."},
+  {kw:"tell sb to V / not to V", rule:"tell/ask + O + (not) + to V — tường thuật câu mệnh lệnh", ex:"\"Close the door,\" he said to me.", ans:"He told me to close the door."},
+  {kw:"ask if/whether", rule:"tường thuật câu hỏi Yes/No: ask/wonder + if/whether + mệnh đề", ex:"\"Are you coming?\" she asked.", ans:"She asked if I was coming."},
+  {kw:"gerund sau enjoy/like/love/finish/stop", rule:"enjoy/finish/give up/stop/mind + Ving", ex:"She likes to swim. → She enjoys swimming.", ans:"She enjoys swimming."},
+  {kw:"to-infinitive sau want/decide/plan/hope", rule:"want/decide/plan/hope/promise + to V", ex:"He wants that he can travel abroad.", ans:"He wants to travel abroad."},
+  {kw:"it takes + time + to V", rule:"It takes (sb) + khoảng thời gian + to V", ex:"I need 20 minutes to get to school.", ans:"It takes me 20 minutes to get to school."},
+  {kw:"spend + time + Ving", rule:"spend + khoảng thời gian/tiền + (on) + Ving", ex:"He plays football for 2 hours every day.", ans:"He spends 2 hours playing football every day."},
+  {kw:"not only...but also", rule:"not only + A + but also + B — vừa...vừa", ex:"She is clever and she is also kind.", ans:"She is not only clever but also kind."},
+  {kw:"neither...nor", rule:"neither + A + nor + B — không...cũng không", ex:"He doesn't like tea and he doesn't like coffee.", ans:"He likes neither tea nor coffee."},
+  {kw:"the first time (thì hoàn thành)", rule:"It's the first time + S + have/has + V3", ex:"I have never been to Paris before now.", ans:"This is the first time I have been to Paris."},
+  {kw:"superlative (the most/-est)", rule:"the + tính từ đuôi -est / the most + tính từ dài", ex:"No other student in the class is as tall as Tom.", ans:"Tom is the tallest student in the class."},
+  {kw:"as soon as", rule:"as soon as + mệnh đề — ngay khi", ex:"I will call you the moment I arrive.", ans:"I will call you as soon as I arrive."},
+  {kw:"if (điều kiện loại 1/2)", rule:"If + hiện tại đơn, ... will + V (loại 1) / If + quá khứ đơn, ... would + V (loại 2)", ex:"Study hard or you will fail.", ans:"If you don't study hard, you will fail."}
+],
+tenses: [
+  {name:"Present Simple — Hiện tại đơn", form:"(+) S + V(s/es)  |  (-) S + don't/doesn't + V  |  (?) Do/Does + S + V?", usage:"Thói quen, sự thật hiển nhiên, lịch trình cố định (tàu, giờ học...)", signal:"always, usually, often, sometimes, never, every day/week, on Mondays", ex:"She works in a bank. She doesn't like coffee. The train leaves at 9am."},
+  {name:"Present Continuous — Hiện tại tiếp diễn", form:"(+) S + am/is/are + V-ing  |  (-) S + am/is/are + not + V-ing  |  (?) Am/Is/Are + S + V-ing?", usage:"Việc đang xảy ra ngay lúc nói; kế hoạch đã sắp xếp trong tương lai gần", signal:"now, right now, at the moment, look!, listen!; tonight, tomorrow (khi đã có kế hoạch)", ex:"She is studying right now. I am meeting him tomorrow at 6pm."},
+  {name:"Present Perfect — Hiện tại hoàn thành", form:"(+) S + have/has + V3  |  (-) S + haven't/hasn't + V3  |  (?) Have/Has + S + V3?", usage:"Việc xảy ra trong quá khứ nhưng không rõ/không quan trọng thời điểm, còn liên quan đến hiện tại; kinh nghiệm", signal:"already, just, yet, ever, never, since, for, so far, recently", ex:"I have already finished my homework. Have you ever been to Japan?"},
+  {name:"Present Perfect Continuous — HTHT tiếp diễn", form:"(+) S + have/has + been + V-ing", usage:"Nhấn mạnh QUÁ TRÌNH của hành động bắt đầu trong quá khứ, kéo dài đến hiện tại (có thể còn tiếp tục)", signal:"since, for, how long, all day/week, lately", ex:"I have been waiting for you for two hours."},
+  {name:"Past Simple — Quá khứ đơn", form:"(+) S + V2/-ed  |  (-) S + didn't + V  |  (?) Did + S + V?", usage:"Hành động đã xảy ra và kết thúc hẳn trong quá khứ, biết rõ thời điểm", signal:"yesterday, last night/week/year, ago, in 2010, when I was young", ex:"She visited her grandma last weekend. Did you see that film?"},
+  {name:"Past Continuous — Quá khứ tiếp diễn", form:"(+) S + was/were + V-ing", usage:"Hành động đang xảy ra tại 1 thời điểm cụ thể trong quá khứ; hoặc đang xảy ra thì bị hành động khác (QKĐ) xen vào", signal:"at 8pm yesterday, while, when (kèm hành động ngắn xen vào), at that time", ex:"I was cooking dinner when the phone rang."},
+  {name:"Past Perfect — Quá khứ hoàn thành", form:"(+) S + had + V3", usage:"Hành động xảy ra TRƯỚC một hành động/thời điểm khác trong quá khứ (trước quá khứ)", signal:"before, after, by the time, already, just, when (kèm 2 mốc quá khứ)", ex:"The train had left before we arrived at the station."},
+  {name:"Future Simple (will) — Tương lai đơn", form:"(+) S + will + V  |  (-) S + won't + V  |  (?) Will + S + V?", usage:"Quyết định tức thời tại thời điểm nói; dự đoán không có căn cứ rõ ràng; lời hứa/đề nghị", signal:"tomorrow, next week/month/year, in the future, I think/hope/promise, probably", ex:"I think it will rain tomorrow. I'll help you with that."},
+  {name:"Near Future (be going to) — Tương lai gần", form:"(+) S + am/is/are + going to + V", usage:"Dự định đã có kế hoạch từ trước; dự đoán có căn cứ/dấu hiệu rõ ràng ở hiện tại", signal:"look at those clouds..., plan to, intend to, next weekend (đã lên kế hoạch)", ex:"Look at those clouds! It's going to rain. We're going to visit Paris next month."},
+  {name:"Future Continuous — Tương lai tiếp diễn", form:"(+) S + will be + V-ing", usage:"Hành động đang diễn ra tại 1 thời điểm xác định trong tương lai", signal:"at this time tomorrow, at 8pm next Friday", ex:"This time tomorrow, I will be flying to London."}
 ],
 r1: [
   ["Đổi chỗ hoặc lịch tập thể dục tạm thời tuần này","somewhere different this week"],
@@ -928,11 +1007,50 @@ const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(M
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const norm=s=>s.toLowerCase().normalize('NFC').replace(/[’']/g,"'").replace(/[.,;:!?£$]/g,'').replace(/\s+/g,' ').trim();
 const splitWords=s=>s.split(',').map(x=>x.trim()).filter(Boolean);
+const enOnly=s=>{const m=String(s).match(/^(.*?)\s*\([^)]*\)\s*$/); return m?m[1]:s;};
+let enVoice=null;
+function pickVoice(){
+  try{
+    const vs=window.speechSynthesis.getVoices();
+    // Prefer higher-quality network voices (Google/Natural/Neural) over the default robotic ones.
+    enVoice = vs.find(v=>/en-US/.test(v.lang) && /Google|Natural|Neural|Premium/i.test(v.name))
+      || vs.find(v=>/^en/.test(v.lang) && /Google|Natural|Neural|Premium/i.test(v.name))
+      || vs.find(v=>/en-US|en_US/.test(v.lang))
+      || vs.find(v=>/^en/.test(v.lang))
+      || null;
+  }catch(e){}
+}
+if('speechSynthesis' in window){
+  pickVoice();
+  window.speechSynthesis.onvoiceschanged = pickVoice;
+}
+function speak(text){
+  try{
+    if(!('speechSynthesis' in window)){ alert('Trình duyệt này chưa hỗ trợ đọc, thử Chrome nhé.'); return; }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(enOnly(text));
+    u.lang='en-US'; u.rate=0.92; u.pitch=1;
+    if(enVoice) u.voice=enVoice;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+function speakBtn(getText, cls){
+  const b=el('button','spk'+(cls?' '+cls:''),'🔊');
+  b.type='button';
+  b.setAttribute('aria-label','Nghe phát âm');
+  b.onclick=(e)=>{e.stopPropagation(); speak(typeof getText==='function'?getText():getText);};
+  return b;
+}
 
 /* ---------- decks (shared by flashcards + quiz) ---------- */
 const DECKS = {
   r1:{name:'Reading P1 — biển báo', note:DATA.r1.length+' cặp', items:DATA.r1.map(([a,b])=>({q:a,a:b}))},
   r2:{name:'Reading P2 — nối người', note:'55 nhu cầu', items:DATA.r2.flatMap(g=>g.rows.map(([a,b])=>({q:g.topic+': '+a,a:b})))},
+  r3:{name:'Reading P3 — đúng/sai', note:DATA.r3.reduce((n,x)=>n+x.a.length+x.b.length,0)+' câu', items:DATA.r3.flatMap(x=>{
+    const mk=(s,ok)=>{const m=s.match(/^(.*?)\s*\(([^)]*)\)\s*$/);const en=m?m[1]:s;const vi=m?m[2]:'';
+      return {q:x.t+': "'+en+'"', a:(ok?'✅ ĐÚNG — khớp với nội dung bài. ':'❌ SAI — đây là câu bẫy. ')+vi};};
+    return [...x.a.map(s=>mk(s,true)), ...x.b.map(s=>mk(s,false))];
+  })},
   r4:{name:'Reading P4 — mục đích bài', note:DATA.r4.length+' bài', items:DATA.r4.map(x=>({q:'Mục đích bài “'+x.t+'”?',a:x.chain[0][1]+' ('+x.chain[0][2]+')'}))},
   w1:{name:'Writing P1 — viết lại câu', note:DATA.w1.length+' cấu trúc', items:DATA.w1.map(([a,b])=>({q:a,a:b}))},
   l1:{name:'Listening P1 — tranh', note:DATA.l1.length+' câu', items:DATA.l1.map(([q,a,d])=>({q:q,a:a+' — '+d}))},
@@ -965,6 +1083,176 @@ VIEWS.tips = ()=>{
   return f;
 };
 
+/* 1b. TỪ KHOÁ → CẤU TRÚC (Writing Part 1) */
+let kwFilter='';
+VIEWS.w1kw = ()=>{
+  const f=document.createDocumentFragment();
+  f.append(el('p','lede','Writing Part 1 luôn cho 1 từ khoá (in đậm) — thấy từ nào bên trái thì dùng ngay cấu trúc bên phải. Gõ để lọc nhanh.'));
+  const box=el('input');
+  box.type='text'; box.placeholder='Gõ từ khoá, VD: enough, wish, since...'; box.value=kwFilter;
+  box.className='srch';
+  box.oninput=()=>{kwFilter=box.value; paintList();};
+  f.append(box);
+  const list=el('div','kwlist');
+  f.append(list);
+  function paintList(){
+    list.innerHTML='';
+    const q=norm(kwFilter);
+    const items=DATA.w1kw.filter(x=>!q || norm(x.kw).includes(q) || norm(x.rule).includes(q));
+    if(!items.length){ list.append(el('p','muted','Không tìm thấy từ khoá nào khớp.')); return; }
+    items.forEach(x=>{
+      const c=el('div','card kwcard');
+      c.append(el('div','kwhead','Nếu đề cho từ khoá: <b>'+esc(x.kw)+'</b>'));
+      c.append(el('p','kwrule','→ Dùng cấu trúc: '+esc(x.rule)));
+      c.append(el('p','kwex','Đề: '+esc(x.ex)));
+      const ansP=el('p','kwans','Viết lại: <b>'+esc(x.ans)+'</b> ');
+      ansP.append(speakBtn(x.ans));
+      c.append(ansP);
+      list.append(c);
+    });
+  }
+  paintList();
+  return f;
+};
+
+/* 1c. CÁC THÌ */
+let tsFilter='';
+VIEWS.tenses = ()=>{
+  const f=document.createDocumentFragment();
+  f.append(el('p','lede','Nếu thấy dấu hiệu nhận biết bên dưới trong câu → chia động từ theo đúng thì tương ứng. Gõ để lọc nhanh.'));
+  const box=el('input');
+  box.type='text'; box.placeholder='Gõ để lọc, VD: yesterday, since, going to...'; box.value=tsFilter;
+  box.className='srch';
+  box.oninput=()=>{tsFilter=box.value; paintList();};
+  f.append(box);
+  const list=el('div','kwlist');
+  f.append(list);
+  function paintList(){
+    list.innerHTML='';
+    const q=norm(tsFilter);
+    const items=DATA.tenses.filter(x=>!q || norm(x.name).includes(q) || norm(x.signal).includes(q) || norm(x.usage).includes(q));
+    if(!items.length){ list.append(el('p','muted','Không tìm thấy thì nào khớp.')); return; }
+    items.forEach(x=>{
+      const c=el('div','card kwcard');
+      c.append(el('div','kwhead','<b>'+esc(x.name)+'</b>'));
+      c.append(el('p','kwrule','Công thức: '+esc(x.form)));
+      c.append(el('p','kwex','Dùng khi: '+esc(x.usage)));
+      c.append(el('p','kwex','Dấu hiệu nhận biết: <b>'+esc(x.signal)+'</b>'));
+      const exP=el('p','kwans','Ví dụ: '+esc(x.ex)+' ');
+      exP.append(speakBtn(x.ex));
+      c.append(exP);
+      list.append(c);
+    });
+  }
+  paintList();
+  return f;
+};
+
+/* 1d. NGHE TRƯỚC KHI NGỦ — chỉ đọc tiếng Anh */
+const SLEEP_SRC = {
+  r1:{label:'Từ vựng thông báo (Reading P1)', build:()=>DATA.r1.map(([vi,en])=>({vi,en}))},
+  r2:{label:'Từ vựng tình huống (Reading P2)', build:()=>DATA.r2.flatMap(g=>g.rows.map(([vi,en])=>({vi,en})))},
+  r3:{label:'Câu đúng trong bài đọc (Reading P3)', build:()=>DATA.r3.flatMap(x=>x.a.map(s=>{const m=s.match(/^(.*?)\s*\(([^)]*)\)\s*$/); return {en:m?m[1]:s, vi:m?m[2]:''};}))},
+  w1kw:{label:'Cấu trúc viết lại câu (Writing P1)', build:()=>DATA.w1kw.map(x=>({vi:'Từ khoá '+x.kw+' — '+x.rule, en:x.ans}))},
+  tenses:{label:'Các thì', build:()=>DATA.tenses.map(x=>({vi:x.name+'. '+x.usage, en:x.ex}))}
+};
+let sleepChecked={r1:true, r2:true, r3:false, w1kw:false, tenses:false};
+let sleepRate=0.85, sleepMins=20;
+let sleepPlaying=false, sleepQueue=[], sleepIdx=0, sleepTimerId=null;
+function sleepSpeak(text,lang,rate,onEnd){
+  try{
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang=lang; u.rate=rate;
+    if(lang==='en-US' && enVoice) u.voice=enVoice;
+    u.onend=onEnd; u.onerror=onEnd;
+    window.speechSynthesis.speak(u);
+  }catch(e){ onEnd&&onEnd(); }
+}
+function sleepStop(){
+  sleepPlaying=false;
+  try{ window.speechSynthesis.cancel(); }catch(e){}
+  if(sleepTimerId){ clearTimeout(sleepTimerId); sleepTimerId=null; }
+}
+VIEWS.sleep = ()=>{
+  const f=document.createDocumentFragment();
+  f.append(el('p','lede','Chọn nội dung muốn ôn, bấm Phát rồi để điện thoại một bên — app chỉ đọc câu tiếng Anh (lặp lại liên tục), phần tiếng Việt chỉ hiện trên màn hình để bạn liếc qua nếu cần, không đọc thành tiếng nữa.'));
+  const opts=el('div','sleepopts');
+  Object.entries(SLEEP_SRC).forEach(([k,src])=>{
+    const lab=el('label','sleepchk');
+    const cb=el('input'); cb.type='checkbox'; cb.checked=!!sleepChecked[k];
+    cb.onchange=()=>{sleepChecked[k]=cb.checked;};
+    lab.append(cb, document.createTextNode(' '+src.label));
+    opts.append(lab);
+  });
+  f.append(opts);
+
+  const row1=el('div','sleeprow');
+  const rateLab=el('label',null,'Tốc độ đọc');
+  const rateSel=el('select');
+  [['0.7','Chậm'],['0.85','Vừa'],['1','Bình thường']].forEach(([v,l])=>{
+    const o=el('option',null,l); o.value=v; if(+v===sleepRate) o.selected=true; rateSel.append(o);
+  });
+  rateSel.onchange=()=>{sleepRate=+rateSel.value;};
+  row1.append(rateLab, rateSel);
+  const timeLab=el('label',null,'Hẹn giờ tắt');
+  const timeSel=el('select');
+  [[10,'10 phút'],[20,'20 phút'],[30,'30 phút'],[45,'45 phút'],[60,'60 phút'],[0,'Không giới hạn']].forEach(([v,l])=>{
+    const o=el('option',null,l); o.value=v; if(+v===sleepMins) o.selected=true; timeSel.append(o);
+  });
+  timeSel.onchange=()=>{sleepMins=+timeSel.value;};
+  row1.append(timeLab, timeSel);
+  f.append(row1);
+
+  const stage=el('div','sleepstage');
+  f.append(stage);
+
+  function paintStage(status, item){
+    stage.innerHTML='';
+    if(item){
+      if(item.vi) stage.append(el('p','sleepvi',esc(item.vi)));
+      stage.append(el('p','sleepen',esc(item.en)));
+    }
+    const controls=el('div','row');
+    if(!sleepPlaying){
+      const p=el('button','btn yes','▶ Phát');
+      p.onclick=()=>startSleep();
+      controls.append(p);
+    }else{
+      const s=el('button','btn no','■ Dừng');
+      s.onclick=()=>{ sleepStop(); paintStage('stopped'); };
+      controls.append(s);
+    }
+    stage.append(el('p','hint', status==='stopped'?'Đã dừng.':(sleepPlaying?'Đang phát tiếng Anh… màn hình có thể tắt, âm thanh vẫn tiếp tục nếu trình duyệt cho phép chạy nền.':'Sẵn sàng.')));
+    stage.append(controls);
+  }
+
+  function startSleep(){
+    const keys=Object.keys(sleepChecked).filter(k=>sleepChecked[k]);
+    if(!keys.length){ alert('Chọn ít nhất 1 nội dung để nghe.'); return; }
+    let list=[];
+    keys.forEach(k=>list=list.concat(SLEEP_SRC[k].build()));
+    list=list.filter(x=>x.en);
+    if(!list.length){ alert('Không có nội dung để đọc.'); return; }
+    sleepQueue=shuffle(list); sleepIdx=0; sleepPlaying=true;
+    if(sleepMins>0){ sleepTimerId=setTimeout(()=>{ sleepStop(); paintStage('stopped'); }, sleepMins*60000); }
+    playNext();
+  }
+  function playNext(){
+    if(!sleepPlaying) return;
+    if(sleepIdx>=sleepQueue.length){ sleepIdx=0; sleepQueue=shuffle(sleepQueue); }
+    const item=sleepQueue[sleepIdx++];
+    paintStage('playing', item);
+    // Only the English sentence is spoken aloud — Vietnamese stays on-screen as a silent gloss.
+    sleepSpeak(item.en, 'en-US', sleepRate, ()=>{
+      if(!sleepPlaying) return;
+      setTimeout(playNext, 900);
+    });
+  }
+
+  paintStage(sleepPlaying?'playing':'idle', null);
+  return f;
+};
+
 /* 2. THẺ LẬT */
 let fcKey='r1', fcQueue=[], fcCur=null, fcFlip=false;
 VIEWS.cards = ()=>{
@@ -982,10 +1270,16 @@ function drawCard(stage){
   if(!fcCur) { fcCur=fcQueue.shift(); fcFlip=false; }
   const box=el('div','stage');
   box.append(el('p','meta','<span>'+esc(DECKS[fcKey].name)+'</span><span>còn '+fcQueue.length+' thẻ</span>'));
-  box.append(el('p','prompt',esc(fcCur.q)));
+  const pr=el('p','prompt');
+  pr.append(document.createTextNode(fcCur.q+' '));
+  pr.append(speakBtn(fcCur.q));
+  box.append(pr);
   if(fcFlip){
     const a=el('div','answer');
-    a.append(el('p','big',esc(fcCur.a)));
+    const ap=el('p','big');
+    ap.append(document.createTextNode(fcCur.a+' '));
+    ap.append(speakBtn(fcCur.a));
+    a.append(ap);
     box.append(a);
   }
   const row=el('div','row');
@@ -1234,17 +1528,29 @@ function refAll(){
   f.append(c5);
   f.append(el('h2','sec','Listening Part 1 — 21 tranh'));
   const cl=el('div','card');
-  DATA.l1.forEach(([q,a,d])=>cl.append(el('div','pair','<span class="vi">'+esc(q)+'</span><span class="en">'+esc(a)+' — '+esc(d)+'</span>')));
+  DATA.l1.forEach(([q,a,d])=>{
+    const row=el('div','pair','<span class="vi">'+esc(q)+'</span><span class="en">'+esc(a)+' — '+esc(d)+'</span>');
+    row.querySelector('.en').prepend(speakBtn(q));
+    cl.append(row);
+  });
   f.append(cl);
   f.append(el('h2','sec','Listening Part 3 — 12 bộ từ điền'));
   const c3=el('div','card');
-  DATA.l3.forEach(([t,w])=>c3.append(el('div','pair','<span class="vi">'+esc(t)+'</span><span class="en">'+esc(w)+'</span>')));
+  DATA.l3.forEach(([t,w])=>{
+    const row=el('div','pair','<span class="vi">'+esc(t)+'</span><span class="en">'+esc(w)+'</span>');
+    row.querySelector('.en').prepend(speakBtn(w));
+    c3.append(row);
+  });
   f.append(c3);
   f.append(el('h2','sec','Listening Part 4 — 11 hội thoại, 6 câu mỗi bài'));
   DATA.l4.forEach(t=>{
     const c=el('div','card');
     c.append(el('h3',null,esc(t.t)));
-    t.rows.forEach((r,i)=>c.append(el('div','trap','<span class="'+(r[1]==='A'?'v':'x')+'">'+r[1]+'</span><span>'+(i+1)+'. '+esc(r[0])+'</span>')));
+    t.rows.forEach((r,i)=>{
+      const row=el('div','trap','<span class="'+(r[1]==='A'?'v':'x')+'">'+r[1]+'</span><span>'+(i+1)+'. '+esc(r[0])+'</span>');
+      row.append(speakBtn(r[0]));
+      c.append(row);
+    });
     f.append(c);
   });
   return f;
@@ -1387,7 +1693,7 @@ let exResult=0;
 
 /* ---------- router ---------- */
 const TABS=[
-  ['tips','Mẹo'],['exam','Làm đề'],['cards','Thẻ lật'],['quiz','Trắc nghiệm'],
+  ['tips','Mẹo'],['w1kw','Từ khoá viết'],['tenses','Các thì'],['sleep','Nghe trước ngủ'],['exam','Làm đề'],['cards','Thẻ lật'],['quiz','Trắc nghiệm'],
   ['traps','Bẫy A/B'],['fill','Gõ dãy từ'],['write','Viết'],['ref','Tra cứu']
 ];
 let cur='tips';
