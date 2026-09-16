@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cambridge Preliminary (PET) - Reading & Writing Master Web App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .heading-font { font-family: 'Space Grotesk', sans-serif; }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col selection:bg-indigo-600 selection:text-white">
+
+  <!-- Header -->
+  <header class="bg-slate-900 text-white sticky top-0 z-50 border-b border-slate-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-xl shadow">PET</div>
+        <div>
+          <h1 class="heading-font font-bold text-base md:text-lg">Cambridge English Preliminary Booster</h1>
+          <p class="text-xs text-slate-400">Trọn bộ Bài Tập Reading (Part 1 - 5) & Writing (Part 1 - 3)</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="bg-slate-800 p-1 rounded-xl flex text-xs">
+          <button id="btnModePractice" onclick="setMode('practice')" class="px-3 py-1.5 rounded-lg font-semibold bg-indigo-600 text-white transition">💡 Tự học & Giải thích</button>
+          <button id="btnModeExam" onclick="setMode('exam')" class="px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white transition">⏱️ Thi thử (Tính giờ)</button>
+        </div>
+        <div id="examTimer" class="hidden items-center gap-1.5 bg-rose-950 border border-rose-600 px-3 py-1 rounded-lg text-rose-300 font-mono text-xs font-bold">
+          ⏳ <span id="timerVal">60:00</span>
+        </div>
+        <button onclick="resetAll()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg transition">Làm lại</button>
+      </div>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <div class="bg-slate-950 border-t border-slate-800 overflow-x-auto custom-scroll">
+      <div class="max-w-7xl mx-auto px-4 flex gap-1 py-1.5 text-xs whitespace-nowrap">
+        <button onclick="switchTab('r1')" id="tab-r1" class="tab-btn px-3 py-1.5 rounded-lg font-bold bg-indigo-600 text-white">Reading Part 1</button>
+        <button onclick="switchTab('r2')" id="tab-r2" class="tab-btn px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white">Reading Part 2</button>
+        <button onclick="switchTab('r3')" id="tab-r3" class="tab-btn px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white">Reading Part 3</button>
+        <button onclick="switchTab('r4')" id="tab-r4" class="tab-btn px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white">Reading Part 4</button>
+        <button onclick="switchTab('r5')" id="tab-r5" class="tab-btn px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white">Reading Part 5</button>
+        <button onclick="switchTab('w1')" id="tab-w1" class="tab-btn px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white">Writing Part 1 (Biến đổi câu)</button>
+        <button onclick="switchTab('w23')" id="tab-w23" class="tab-btn px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white">Writing Part 2 & 3 (Bài mẫu & Dàn ý)</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto w-full px-4 py-6 flex-1">
+    <!-- Stat Header -->
+    <div class="mb-6 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h2 id="sectionTitle" class="heading-font text-base font-bold text-slate-900">Reading Part 1: Biển báo, tin nhắn & thông báo ngắn</h2>
+        <p id="sectionDesc" class="text-xs text-slate-500">Bao gồm cả 3 bài: Daily life, Social interaction, Hobbies & leisure (15 câu trắc nghiệm chuẩn PET).</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="text-right">
+          <span class="text-xs text-slate-500 block">Số câu chính xác</span>
+          <span id="scoreBadge" class="text-xl font-bold font-mono text-indigo-600">0 / 0</span>
+        </div>
+        <button id="btnSubmitExam" onclick="submitExam()" class="hidden px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow">Nộp bài chấm điểm</button>
+      </div>
+    </div>
+
+    <!-- PANE 1: READING PART 1 -->
+    <section id="pane-r1" class="pane-content space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="r1Container"></div>
+    </section>
+
+    <!-- PANE 2: READING PART 2 -->
+    <section id="pane-r2" class="pane-content hidden space-y-8">
+      <!-- Unit 1: Sports Classes -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h3 class="font-bold text-indigo-700 text-sm border-b pb-2">Unit 1: Health & Sports Classes (Chloe, Mike, Sofia, Jack, Tara)</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-6 space-y-3" id="r2PeopleContainer1"></div>
+          <div class="lg:col-span-6 max-h-[500px] overflow-y-auto pr-2 custom-scroll space-y-3" id="r2ClassesContainer1"></div>
+        </div>
+      </div>
+      <!-- Unit 2: Activity Clubs -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h3 class="font-bold text-indigo-700 text-sm border-b pb-2">Unit 2: Free Time Activity Clubs (Emma, Marco, Amina, Niko, Erica)</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-6 space-y-3" id="r2PeopleContainer2"></div>
+          <div class="lg:col-span-6 max-h-[500px] overflow-y-auto pr-2 custom-scroll space-y-3" id="r2ClassesContainer2"></div>
+        </div>
+      </div>
+      <!-- Unit 3: Holiday Destinations -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h3 class="font-bold text-indigo-700 text-sm border-b pb-2">Unit 3: Travel & Holidays (George, Ana, Harry, Jess, Greg)</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-6 space-y-3" id="r2PeopleContainer3"></div>
+          <div class="lg:col-span-6 max-h-[500px] overflow-y-auto pr-2 custom-scroll space-y-3" id="r2ClassesContainer3"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANE 3: READING PART 3 -->
+    <section id="pane-r3" class="pane-content hidden space-y-8">
+      <!-- Passage 1: MU -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="lg:col-span-6 space-y-3">
+          <h4 class="font-bold text-slate-900 text-base">Passage 1: Football stars at school (Manchester United)</h4>
+          <div class="text-xs leading-relaxed text-slate-600 bg-slate-50 p-4 rounded-xl max-h-[380px] overflow-y-auto custom-scroll space-y-2">
+            <p>Can you imagine being a famous football star but still attending school every Monday morning as usual? That's what some students at Ashton-on-Mersey School in England do! The school is about 7 km from Old Trafford... All football clubs have to make sure players under 18 are getting an education... Young players have classes two days a week and study a range of different subjects. They still follow the rules like all the other students in the school. The football club has given money to the school... When one French-speaking player came back to visit, he joined a French class, helping students improve language skills!</p>
+          </div>
+        </div>
+        <div class="lg:col-span-6 space-y-3" id="r3Questions1"></div>
+      </div>
+      <!-- Passage 2: Adlers' Personal Shopper -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="lg:col-span-6 space-y-3">
+          <h4 class="font-bold text-slate-900 text-base">Passage 2: Personal Shopping at Adlers' Store</h4>
+          <div class="text-xs leading-relaxed text-slate-600 bg-slate-50 p-4 rounded-xl max-h-[380px] overflow-y-auto custom-scroll space-y-2">
+            <p>Our personal shoppers have helped hundreds of customers over many years... We charge a small amount for your appointment, but we give you this money back if you buy any of the items you try on. Before you look at any clothes, our personal shopper will sit down with you and discuss what you are looking for... All our personal shoppers are trained in our stores by experienced staff... You get your own private changing room... You can bring up to five friends with you... For this month only, 10% discount on all departments including electronic items!</p>
+          </div>
+        </div>
+        <div class="lg:col-span-6 space-y-3" id="r3Questions2"></div>
+      </div>
+    </section>
+
+    <!-- PANE 4: READING PART 4 -->
+    <section id="pane-r4" class="pane-content hidden space-y-8">
+      <!-- Article 1: Underwater Hotel -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h4 class="font-bold text-base text-slate-900">1. A hotel under the sea (Planet Ocean)</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="r4Passage1Container"></div>
+      </div>
+      <!-- Article 2: Cruise Ships -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h4 class="font-bold text-base text-slate-900">2. The price of a perfect holiday? (Cruises & Pollution)</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="r4Passage2Container"></div>
+      </div>
+      <!-- Article 3: Jamaica Athletics -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h4 class="font-bold text-base text-slate-900">3. Athletics in Jamaica (Boys and Girls Championships)</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="r4Passage3Container"></div>
+      </div>
+    </section>
+
+    <!-- PANE 5: READING PART 5 -->
+    <section id="pane-r5" class="pane-content hidden space-y-8">
+      <!-- Passage 1: Emma Watson -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h4 class="font-bold text-base text-indigo-900">1. Emma Watson (Sách trang 36 - 37)</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3" id="r5EmmaContainer"></div>
+      </div>
+      <!-- Passage 2: Glasgow Transport -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h4 class="font-bold text-base text-indigo-900">2. Travelling in the Glasgow area (Sách trang 38 - 39)</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3" id="r5GlasgowContainer"></div>
+      </div>
+      <!-- Passage 3: Weather Forecasts -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <h4 class="font-bold text-base text-indigo-900">3. Weather forecasts (Sách trang 40 - 41)</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3" id="r5WeatherContainer"></div>
+      </div>
+    </section>
+
+    <!-- PANE 6: WRITING PART 1 -->
+    <section id="pane-w1" class="pane-content hidden space-y-6">
+      <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3.5 text-xs text-indigo-950">
+        💡 <strong>Quy tắc viết lại câu:</strong> Điền từ 1 đến 3 từ vào chỗ trống sao cho câu thứ 2 mang nghĩa giống hệt câu thứ 1. Nhập câu trả lời và nhấn <strong>Kiểm tra</strong>.
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="w1Container"></div>
+    </section>
+
+    <!-- PANE 7: WRITING PART 2 & 3 -->
+    <section id="pane-w23" class="pane-content hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Writing Part 2 Guides -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">✉️ Writing Part 2 (Short Message 35 - 45 words)</h3>
+          
+          <div class="p-3.5 bg-slate-50 border rounded-xl space-y-2 text-xs">
+            <span class="font-bold text-indigo-600 block">Đề 1 (Trang 49): Xin lỗi bạn George vì không đi xem phim được</span>
+            <p class="text-slate-600 italic">Yêu cầu: Xin lỗi, giải thích lý do, đề xuất một dịp hẹn khác.</p>
+            <div class="bg-white p-3 rounded-lg border text-slate-800 leading-relaxed font-mono">
+              Hi George,<br>
+              I'm really sorry but I can't go to the cinema with you this Friday because I have to study for my exams. Why don't we go on Saturday afternoon instead? Let me know if that's OK for you.<br>
+              Best,<br>Linh
+            </div>
+          </div>
+
+          <div class="p-3.5 bg-slate-50 border rounded-xl space-y-2 text-xs">
+            <span class="font-bold text-indigo-600 block">Đề 2 (Trang 51): Rủ bạn Jenna đến quán cà phê mới mở</span>
+            <p class="text-slate-600 italic">Yêu cầu: Kể về quán đã đến, món/điều thích nhất, rủ bạn đi cùng.</p>
+            <div class="bg-white p-3 rounded-lg border text-slate-800 leading-relaxed font-mono">
+              Hi Jenna,<br>
+              Last weekend I visited a wonderful new café in the town centre. I loved their hot chocolate and delicious strawberry cakes! Would you like to go there with me this Sunday afternoon? See you soon!<br>
+              Linh
+            </div>
+          </div>
+        </div>
+
+        <!-- Writing Part 3 Guides -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">📝 Writing Part 3 (Letter / Story ~100 words)</h3>
+
+          <div class="p-3.5 bg-slate-50 border rounded-xl space-y-2 text-xs">
+            <span class="font-bold text-rose-600 block">Đề viết thư (Trang 55): Khuyên bạn cải thiện mối quan hệ gia đình</span>
+            <div class="bg-white p-3 rounded-lg border text-slate-800 leading-relaxed font-mono">
+              Dear Jodie,<br>
+              I'm sorry to hear that you had an argument with your father and that your little sister annoyed you. Disagreements happen in every family, so you don't need to worry too much.<br>
+              I usually get on very well with my parents because we talk openly whenever there is a problem. In my opinion, you should apologize to your dad for getting angry and explain your feelings calmly. You could also organize a movie night or cook dinner together to cheer everyone up!<br>
+              Write soon and let me know how it goes.<br>
+              Best wishes,<br>Linh
+            </div>
+          </div>
+
+          <div class="p-3.5 bg-slate-50 border rounded-xl space-y-2 text-xs">
+            <span class="font-bold text-rose-600 block">Đề viết truyện (Trang 57): Bắt đầu bằng câu cho sẵn</span>
+            <div class="bg-white p-3 rounded-lg border text-slate-800 leading-relaxed font-mono">
+              I saw the advert for a talent show and decided to apply. I had always dreamed of singing on a big stage, so I chose my favourite acoustic song to perform.<br>
+              On the audition day, I felt extremely nervous while waiting for my turn backstage. When they called my name, the bright lights almost blinded me! However, as soon as the guitar started playing, my confidence returned. The judges smiled and clapped when I finished.<br>
+              Finally, they told me I had passed to the live round. It was the most unforgettable moment of my life!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // DATA STORE: ALL READING & WRITING CONTENT FROM EXAM BOOSTER
+    const r1Data = [
+      // Daily Life (Trang 13)
+      { id: 'r1_1', title: 'Gym Notice (P.13)', text: "This week's fitness class will be half an hour earlier, at 6.30 pm, and in the sports hall, not the gym! Next week's class will be back in the gym at the usual time.", q: "What does it say?", opts: [{k:'A',t:"The class will only last for half an hour."}, {k:'B',t:"There won't be a class next week."}, {k:'C',t:"The class will be somewhere different this week."}], c: 'C', exp: "Lớp tuần này chuyển sang 'sports hall, not the gym' -> địa điểm thay đổi." },
+      { id: 'r1_2', title: 'SMS Message (P.13)', text: "Tara, we've run out of coffee! Can you get some at the supermarket when you're coming back from college this afternoon? I'll pay you back tomorrow. - Daisy", q: "What should Tara do?", opts: [{k:'A',t:"buy coffee tomorrow"}, {k:'B',t:"go shopping on her way home"}, {k:'C',t:"give Daisy some money"}], c: 'B', exp: "Mua khi đang trên đường từ trường về = 'on her way home'." },
+      { id: 'r1_3', title: 'Bank Hours (P.13)', text: "BANK OPENING HOURS\nMon - Fri: 9 am to 5 pm\nSaturday: 9 am to 11 am\nThe cash machine outside is in use 24 hours", q: "What does it say?", opts: [{k:'A',t:"You can't go into the bank on Saturday afternoons."}, {k:'B',t:"The cash machine only works when bank is open."}, {k:'C',t:"The bank closes at the same time every day."}], c: 'A', exp: "Thứ Bảy chỉ mở đến 11h trưa -> Chiều thứ Bảy không vào bên trong ngân hàng được." },
+      { id: 'r1_4', title: 'Shower Note (P.13)', text: "Max, There's a problem with the shower. You can't use it unless you want a cold one! Someone's coming to fix it this afternoon, so it'll be OK tomorrow. - Mum", q: "What does the note mean?", opts: [{k:'A',t:"Someone is mending it right now."}, {k:'B',t:"It isn't possible to have a hot shower this morning."}, {k:'C',t:"Max must take cold shower tomorrow."}], c: 'B', exp: "Không có nước nóng sáng nay vì chiều thợ mới tới sửa." },
+      { id: 'r1_5', title: 'Band Practice (P.13)', text: "Hi Mia, I might be late for the band practice tonight. I usually get the bus, but there are lots of delays this week. - Henry", q: "Why did Henry write this?", opts: [{k:'A',t:"to warn Mia that he may not be on time"}, {k:'B',t:"to remind Mia about bus delays"}, {k:'C',t:"to ask which bus to get"}], c: 'A', exp: "Báo trước khả năng bị trễ hẹn tập ban nhạc." },
+      // Social Interaction (Trang 15)
+      { id: 'r1_6', title: 'Sara Email (P.15)', text: "Lily, Thanks for inviting me to your house next Saturday. I'm afraid I can't come because I'm going camping this weekend. Maybe we can meet up when I get back? - Sara", q: "Why has Sara sent this email?", opts: [{k:'A',t:"to accept Lily's invitation"}, {k:'B',t:"to ask Lily to go camping"}, {k:'C',t:"to make an apology to Lily"}], c: 'C', exp: "Gửi lời xin lỗi vì bận đi cắm trại không đến nhà bạn được." },
+      { id: 'r1_7', title: 'Music Festival (P.15)', text: "Music festival - 15 August\nMusic includes rock and hip hop\nTickets: £6 in advance / £8 on the day", q: "What does the notice say?", opts: [{k:'A',t:"Only two types of music."}, {k:'B',t:"Some performances cost more."}, {k:'C',t:"Tickets are cheaper if you buy them before."}], c: 'C', exp: "Mua trước chỉ £6 thay vì £8 tại cửa." },
+      { id: 'r1_8', title: 'Football Match (P.15)', text: "Hi Lucy, The match starts at 5. I'm getting the bus to the stadium. I'll meet you there at 4.30. Don't forget to invite Sam too. - Emma", q: "What should Lucy do?", opts: [{k:'A',t:"get the bus with Emma"}, {k:'B',t:"ask Sam if he wants to come"}, {k:'C',t:"meet Emma and Sam at 5"}], c: 'B', exp: "'Don't forget to invite Sam too' = rủ Sam đi cùng." },
+      { id: 'r1_9', title: 'Jungle Party (P.15)', text: "You are invited to a Jungle party on June 21 from 3 pm. Dress up in an animal costume if you want to - a prize for the best one! Food and drink provided.", q: "What is true?", opts: [{k:'A',t:"Guests should bring food and drink."}, {k:'B',t:"Guests must dress up as animals."}, {k:'C',t:"Guests might win something if they wear a costume."}], c: 'C', exp: "'a prize for the best one' -> có cơ hội trúng giải." },
+      { id: 'r1_10', title: 'Cinema Note (P.15)', text: "Marcus, Don't forget we're going to the cinema this afternoon with James. We can decide what to see when we get there. - Jenna", q: "Why has Jenna left this note?", opts: [{k:'A',t:"to remind him about an arrangement"}, {k:'B',t:"to invite him to the cinema"}, {k:'C',t:"to suggest a film"}], c: 'A', exp: "Nhắc lại cuộc hẹn đi xem phim đã xếp từ trước." },
+      // Hobbies & Leisure (Trang 17)
+      { id: 'r1_11', title: 'Camping Tent (P.17)', text: "Hi George, I'm going camping next weekend, so can I borrow your tent? If you've got a small cooker, that would be great, too. - Josh", q: "Why did Josh write?", opts: [{k:'A',t:"to ask George to go with him"}, {k:'B',t:"to tell George about a new tent"}, {k:'C',t:"to ask if George will lend him some equipment"}], c: 'C', exp: "Mượn lều và bếp dã ngoại của George." },
+      { id: 'r1_12', title: 'Picnic Club (P.17)', text: "Photography club picnic: Saturday 2.30. Bring something for the barbecue - drinks provided. Bring your best pictures to share!", q: "What should members do?", opts: [{k:'A',t:"come to the picnic with food to cook"}, {k:'B',t:"take lots of photos at the picnic"}, {k:'C',t:"tell Tom if they want to go"}], c: 'A', exp: "Mang đồ ăn tự nướng (barbecue)." },
+      { id: 'r1_13', title: 'Art Workshop (P.17)', text: "Art workshop - Saturdays 10.30-12.30. From 15 September for 5 weeks. Suitable for all abilities.", q: "What is true?", opts: [{k:'A',t:"There will be five workshops each week."}, {k:'B',t:"You don't have to be talented to go."}, {k:'C',t:"The final workshop is on 15 Sept."}], c: 'B', exp: "'Suitable for all abilities' = không cần quá giỏi hay tài năng vẫn tham gia được." },
+      { id: 'r1_14', title: 'Music Group (P.17)', text: "If you enjoy playing the guitar and hanging out making music, contact Neil and Joe. No plans to play as a band - we just relax and play!", q: "Call this number if you want to:", opts: [{k:'A',t:"play music with others"}, {k:'B',t:"learn the guitar"}, {k:'C',t:"join a band"}], c: 'A', exp: "Giao lưu chơi nhạc cùng người khác (không lập ban nhạc chuyên nghiệp)." },
+      { id: 'r1_15', title: 'Stamp Sale (P.17)', text: "Stamp collection for sale: Over 12,000 stamps. Some antique and rare items. On offer as a collection only, not individual items.", q: "What is correct?", opts: [{k:'A',t:"The stamps are all very old."}, {k:'B',t:"Some stamps are very unusual."}, {k:'C',t:"You can buy just a few stamps."}], c: 'B', exp: "'rare items' = độc đáo, hiếm, khác lạ (unusual)." }
+    ];
+
+    // R2 Data (15 people across 3 units)
+    const r2Units = [
+      {
+        id: 1,
+        people: [
+          { id: 'r2_p1', n: 'Chloe', d: 'Enjoys team sports, no competitions, morning class, low budget, no expensive equipment.', c: 'C', exp: 'C (Active plus!): Thứ 7 (9-11 am), bóng đá mini/khúc côn cầu phong trào, bao dụng cụ.' },
+          { id: 'r2_p2', n: 'Mike', d: 'Not very fit, finds exercise boring, wants evening class different each week, track progress.', c: 'D', exp: 'D (Water-cise!): Buổi tối (6-8 pm), mỗi tuần một khác, kiểm tra tiến độ hàng tháng.' },
+          { id: 'r2_p3', n: 'Sofia', d: 'Recovering from serious injury, afternoon training, qualified coach for home exercises.', c: 'E', exp: 'E (Fitness for All): Chiều thứ 3 (2-4 pm), HLV chuyên hỗ trợ cá nhân hồi phục chấn thương.' },
+          { id: 'r2_p4', n: 'Jack', d: 'Very fit, training for 200km run, train indoors & outdoors, at least twice a week.', c: 'H', exp: 'H (Go for it!): Chạy công viên + tạ phòng gym, 3 buổi/tuần (Thứ 3, 5, 7).' },
+          { id: 'r2_p5', n: 'Tara', d: 'Takes sport seriously, plays hockey/tennis, enter competitions, only free on weekends.', c: 'G', exp: 'G (Rising stars): Luyện thi đấu các giải league, học thứ Bảy & Chủ Nhật.' }
+        ],
+        classes: [
+          { k: 'A', t: 'Sport for life: Sessions in 7 sports (tennis, basketball). Thu 3-4pm, Sun 2-3.30pm. Just for fun.' },
+          { k: 'B', t: 'Top training: Gym sessions with personal trainer. Mornings 9-11 am for solo training.' },
+          { k: 'C', t: 'Active plus!: Informal team sports (football, hockey). Sat 9-11 am. All equipment provided.' },
+          { k: 'D', t: 'Water-cise!: Fun pool fitness, Tue & Thu 6-8 pm. Different every week. Monthly fitness checks.' },
+          { k: 'E', t: 'Fitness for All: Low-cost gentle exercise. Tue 2-4 pm. Qualified trainers for injuries/home plans.' },
+          { k: 'F', t: 'Sport for all: First-time football/tennis. Outdoor. Tue & Thu 6-8 pm.' },
+          { k: 'G', t: 'Rising stars: Coaching for winners! Teams & racket sports. Sat & Sun. Join local leagues.' },
+          { k: 'H', t: 'Go for it!: Intense indoor weights + outdoor park runs. Tue, Thu, Sat. Personal coaching.' }
+        ]
+      },
+      {
+        id: 2,
+        people: [
+          { id: 'r2_p6', n: 'Emma', d: 'Creative imagination, group projects, visit places and see creative people at work.', c: 'F', exp: 'F (Action!): Làm phim theo nhóm, tham quan phim trường thực tế.' },
+          { id: 'r2_p7', n: 'Marco', d: 'Loves making things, meet people from other cultures, learn skill for outside.', c: 'G', exp: 'G (A world of food): Nấu ăn từ các nền văn hóa, thực hành tại nhà.' },
+          { id: 'r2_p8', n: 'Amina', d: 'Interested in serious issues, listen to talks, international topics, discussions.', c: 'A', exp: 'A (Think!): Thảo luận các sự kiện quốc tế, xem phim tư liệu, chuyên gia diễn thuyết.' },
+          { id: 'r2_p9', n: 'Niko', d: 'Explore where he lives, meet people from backgrounds, history of the city.', c: 'H', exp: 'H (City explorers): Làm bản đồ lịch sử thành phố quá khứ và hiện tại.' },
+          { id: 'r2_p10', n: 'Erica', d: 'Wants to help others, charity, big crowded events, skills for future career.', c: 'C', exp: 'C (Party Plus): Tổ chức hòa nhạc gây quỹ từ thiện đường phố, ghi điểm với nhà tuyển dụng.' }
+        ],
+        classes: [
+          { k: 'A', t: 'Think!: Weekly discussion on global events & documentary films with guest speakers.' },
+          { k: 'B', t: 'Games and chat: Video gaming discussion and visits to game design studios.' },
+          { k: 'C', t: 'Party Plus: Organise street concerts/parties for charity. Great for future employment.' },
+          { k: 'D', t: 'Come dine with me: Visit international restaurants in large groups.' },
+          { k: 'E', t: 'Nature lovers: City wildlife talks and urban animal support groups.' },
+          { k: 'F', t: 'Action!: Make films in teams and visit real professional studios.' },
+          { k: 'G', t: 'A world of food: Cook global dishes taught by international chefs to use at home.' },
+          { k: 'H', t: 'City explorers: Map local historical changes and create public guidebooks.' }
+        ]
+      },
+      {
+        id: 3,
+        people: [
+          { id: 'r2_p11', n: 'George', d: 'Big group of friends, active sports every day, no boats, has young kids in group.', c: 'G', exp: 'G (Active fun): Khu nghỉ dưỡng đầy đủ quần vợt, bơi, golf, phù hợp mọi lứa tuổi từ 5-55.' },
+          { id: 'r2_p12', n: 'Ana', d: 'Sea lover, active and learning new skills, keep away from crowded resorts.', c: 'B', exp: 'B (Making waves): Học chèo thuyền buồm ở Hy Lạp, tránh xa resort đông đúc.' },
+          { id: 'r2_p13', n: 'Harry', d: 'Relax by the sea, meet people, cheap hotel, all-inclusive package.', c: 'A', exp: 'A (Golden Sands): Giá rẻ trọn gói ăn uống, tiệc tối kết bạn bên bờ biển Địa Trung Hải.' },
+          { id: 'r2_p14', n: 'Jess', d: 'Abroad, stay with local families (no hotels), see cultural dance shows.', c: 'D', exp: 'D (Culture shock): Đến Ấn Độ ở cùng người bản xứ và xem biểu diễn nghệ thuật múa.' },
+          { id: 'r2_p15', n: 'Greg', d: 'Peaceful, no crowds, walking in countryside, read book alone.', c: 'C', exp: 'C (Forest Camp): Yên tĩnh trong rừng, tự do tản bộ hoặc đọc sách một mình.' }
+        ],
+        classes: [
+          { k: 'A', t: 'Golden Sands: Affordable beach club in Mallorca. Shows, parties, all meals/drinks included.' },
+          { k: 'B', t: 'Making waves: Learn to sail in Greece. Quiet sea, stay in small ports.' },
+          { k: 'C', t: 'Forest Camp: Farm cabins in the forest. Peaceful walking paths, perfect for reading.' },
+          { k: 'D', t: 'Culture shock: India tour. Stay with local host families and enjoy traditional dance shows.' },
+          { k: 'E', t: 'Seaview Hotel: Luxury hotel in Spain, quiet beach with evening concerts.' },
+          { k: 'F', t: 'Hotel on the sea: 2-week Mediterranean cruise ship holiday.' },
+          { k: 'G', t: 'Active fun: Busy resort with lessons in tennis, golf, swimming for all ages 5-55.' },
+          { k: 'H', t: 'On foot: Walking tour through the mountains of Italy in a group.' }
+        ]
+      }
+    ];
+
+    // R3 Data (20 True/False items)
+    const r3Data1 = [
+      { id: 'r3_1', t: "1. Ashton-on-Mersey School is very close to Old Trafford stadium.", c: 'B', exp: "Trường cách 7 km (không coi là 'very close')." },
+      { id: 'r3_2', t: "2. Young players join Manchester United from many different countries.", c: 'A', exp: "'talented teenagers from all over the world'." },
+      { id: 'r3_3', t: "3. Some young players start playing for the main team when they are 16.", c: 'B', exp: "'most don't join professional teams until they are older'." },
+      { id: 'r3_4', t: "4. Most young players go on to become professional footballers.", c: 'B', exp: "'only a small number of young players will go on...'." },
+      { id: 'r3_5', t: "5. Some football clubs allow their young players to stop studying.", c: 'B', exp: "'All football clubs have to make sure players under 18 get an education'." },
+      { id: 'r3_6', t: "6. At Man United, young players have some experience of normal teenage life.", c: 'A', exp: "'enjoy at least some parts of typical teenage life'." },
+      { id: 'r3_7', t: "7. Man United's young players have classes at school every day.", c: 'B', exp: "Chỉ học văn hóa 2 ngày một tuần (classes two days a week)." },
+      { id: 'r3_8', t: "8. The Manchester United students don't have to follow all school rules.", c: 'B', exp: "'they still follow the rules like all the other students'." },
+      { id: 'r3_9', t: "9. The main advantage for school is receiving money from the club.", c: 'B', exp: "Lợi ích quan trọng hơn ('more importantly') là truyền cảm hứng cho học sinh." },
+      { id: 'r3_10', t: "10. One player helped some students to speak French better.", c: 'A', exp: "Cầu thủ nói tiếng Pháp đã vào lớp giao lưu ngôn ngữ." }
+    ];
+
+    const r3Data2 = [
+      { id: 'r3_11', t: "1. Adlers' Store has just started offering a personal shopping service.", c: 'B', exp: "'helped hundreds of customers over many years' -> đã có từ lâu." },
+      { id: 'r3_12', t: "2. The shopping charge is refunded if you buy some clothes.", c: 'A', exp: "'give you this money back if you buy any of the items'." },
+      { id: 'r3_13', t: "3. The shopper starts by showing you some clothes immediately.", c: 'B', exp: "Ngồi trao đổi nhu cầu trước khi đi chọn đồ." },
+      { id: 'r3_14', t: "4. Personal shoppers learn their skills from experienced staff.", c: 'A', exp: "'trained in our stores by experienced staff'." },
+      { id: 'r3_15', t: "5. You should decide your spending limit before the appointment.", c: 'A', exp: "'good idea to think about money in advance and set a limit'." },
+      { id: 'r3_16', t: "6. You have to share a changing room with other shoppers.", c: 'B', exp: "'get your own private changing room' (phòng thay đồ riêng)." },
+      { id: 'r3_17', t: "7. A maximum of five people can attend an appointment together.", c: 'B', exp: "Bạn có thể dẫn theo tối đa 5 người bạn (tổng là 6 người)." },
+      { id: 'r3_18', t: "8. The personal shopper can help you find clothes at reduced prices.", c: 'A', exp: "'help you to avoid the crowds and find some amazing bargains'." },
+      { id: 'r3_19', t: "9. You have to book in advance to get an appointment.", c: 'B', exp: "Vào ngày vắng khách có thể vào làm luôn mà không cần đặt trước." },
+      { id: 'r3_20', t: "10. The special discount only applies to electronic goods.", c: 'B', exp: "Giảm giá ở tất cả các ngành hàng ('in all departments')." }
+    ];
+
+    // R4 Data (Multiple Choice)
+    const r4Data = [
+      // Underwater Hotel
+      { id: 'r4_1', q: "1. What is the writer doing in this text?", opts: [{k:'A',t:"advertising a new luxury hotel"}, {k:'B',t:"warning about ocean pollution"}, {k:'C',t:"giving information about an underwater hotel"}, {k:'D',t:"giving hotel advice"}], c: 'C', exp: "Cung cấp thông tin chi tiết về dự án khách sạn dưới nước." },
+      { id: 'r4_2', q: "2. What do we learn about the hotel?", opts: [{k:'A',t:"Guests swim down to reach it."}, {k:'B',t:"Lights shine to attract fish."}, {k:'C',t:"It will only have a small number of rooms."}, {k:'D',t:"Sea creatures will fear it."}], c: 'C', exp: "Chỉ có 12 phòng ngủ khách sạn." },
+      { id: 'r4_3', q: "3. What can guests do in the hotel?", opts: [{k:'A',t:"swim out into ocean"}, {k:'B',t:"watch the ocean life near hotel"}, {k:'C',t:"eat freshly caught fish"}, {k:'D',t:"hear the sea sound"}], c: 'B', exp: "Ngắm sinh vật biển bơi lượn xung quanh qua kính." },
+      { id: 'r4_4', q: "4. What is the best thing about it according to designers?", opts: [{k:'A',t:"cheap to build"}, {k:'B',t:"uses little electricity"}, {k:'C',t:"won't cause any environmental damage"}, {k:'D',t:"frightens fish away"}], c: 'C', exp: "Hoàn toàn thân thiện với hệ sinh thái môi trường biển." },
+      { id: 'r4_5', q: "5. What might a guest say about it?", opts: [{k:'A',t:"Expensive with basic facilities."}, {k:'B',t:"Great to stay in a hotel that is good for the planet."}, {k:'C',t:"Disturbs sea life too much."}, {k:'D',t:"I love how it travels around."}], c: 'B', exp: "Tận hưởng không gian đẹp và an tâm vì bảo vệ môi trường." },
+      // Cruises
+      { id: 'r4_6', q: "6. The main purpose of the cruise text is to:", opts: [{k:'A',t:"promote cruise trips"}, {k:'B',t:"criticise passengers"}, {k:'C',t:"explain problems caused by cruise ships"}, {k:'D',t:"persuade bans"}], c: 'C', exp: "Phân tích các tác hại môi trường và áp lực mà tàu du lịch gây ra." },
+      { id: 'r4_7', q: "7. Why do cruise ships cause huge air pollution?", opts: [{k:'A',t:"carry cars"}, {k:'B',t:"inefficient engines"}, {k:'C',t:"water resistance"}, {k:'D',t:"use dirty fuel banned on land"}], c: 'D', exp: "Đốt loại nhiên liệu bẩn không được phép sử dụng trên đất liền." },
+      { id: 'r4_8', q: "8. What happens to waste water on cruise ships?", opts: [{k:'A',t:"carried back ashore"}, {k:'B',t:"all recycled"}, {k:'C',t:"poured directly into the sea"}, {k:'D',t:"turned to drinking water"}], c: 'C', exp: "Lượng nước thải khổng lồ đổ trực tiếp ra đại dương." },
+      { id: 'r4_9', q: "9. Why are passengers unpopular in port towns?", opts: [{k:'A',t:"rude to locals"}, {k:'B',t:"don't spend money on restaurant food"}, {k:'C',t:"occupy all cafes"}, {k:'D',t:"complain about crowds"}], c: 'B', exp: "Chỉ dạo chơi chụp ảnh rồi về tàu ăn uống miễn phí." },
+      { id: 'r4_10', q: "10. Which sentence best describes cruise ships?", opts: [{k:'A',t:"Seem relaxing but aren't environmentally friendly."}, {k:'B',t:"Bring immense benefits."}, {k:'C',t:"Getting greener rapidly."}, {k:'D',t:"Banned in all world ports."}], c: 'A', exp: "Kỳ nghỉ tưởng như hoàn hảo nhưng cực kỳ ô nhiễm." },
+      // Jamaica Athletics
+      { id: 'r4_11', q: "11. The writer's goal in the athletics text is:", opts: [{k:'A',t:"profile a famous coach"}, {k:'B',t:"describe race experience"}, {k:'C',t:"interview Usain Bolt"}, {k:'D',t:"discuss the importance of the championships"}], c: 'D', exp: "Phân tích vai trò giải đấu học sinh thường niên của Jamaica." },
+      { id: 'r4_12', q: "12. What do we know about the Championships?", opts: [{k:'A',t:"Only 300 viewers"}, {k:'B',t:"Young runners just have fun"}, {k:'C',t:"Started over 100 years ago (1910)"}, {k:'D',t:"Adult runners only"}], c: 'C', exp: "Được tổ chức liên tục từ năm 1910 đến nay." },
+      { id: 'r4_13', q: "13. What does coach Simpson state?", opts: [{k:'A',t:"Schools lack interest"}, {k:'B',t:"The event is too huge"}, {k:'C',t:"It encourages athletes to do their best"}, {k:'D',t:"Races should be cancelled"}], c: 'C', exp: "Tạo động lực tập luyện hết mình vì màu cờ sắc áo." },
+      { id: 'r4_14', q: "14. According to Nathaniel Day, the event:", opts: [{k:'A',t:"helps young athletes get used to being filmed"}, {k:'B',t:"is better than the Olympics"}, {k:'C',t:"makes teens scared"}, {k:'D',t:"is stressful"}], c: 'A', exp: "Giúp vận động viên quen với ống kính truyền hình từ khi 12 tuổi." },
+      { id: 'r4_15', q: "15. Best summary of the event:", opts: [{k:'A',t:"International contest"}, {k:'B',t:"Important event helping young athletes improve"}, {k:'C',t:"Just a social carnival"}, {k:'D',t:"Relaxed casual games"}], c: 'B', exp: "Cái nôi đào tạo giúp các vận động viên trẻ vươn tầm thế giới." }
+    ];
+
+    // R5 Data (30 cloze options)
+    const r5Data = {
+      emma: [
+        { n: 1, o: ['trained','coached','taught','learned'], c: 'trained' },
+        { n: 2, o: ['But','So','Although','Despite'], c: 'Although' },
+        { n: 3, o: ['set','series','group','collection'], c: 'series' },
+        { n: 4, o: ['produced','made','caused','created'], c: 'made' },
+        { n: 5, o: ['each','most','every','all'], c: 'all' },
+        { n: 6, o: ['continued','kept','stayed','remained'], c: 'continued' },
+        { n: 7, o: ['passed','spent','gave','allowed'], c: 'spent' },
+        { n: 8, o: ['later','after','past','since'], c: 'since' },
+        { n: 9, o: ['several','plenty','lots','few'], c: 'several' },
+        { n: 10, o: ['too','besides','also','plus'], c: 'also' }
+      ],
+      glasgow: [
+        { n: 1, o: ['many','enough','plenty','most'], c: 'plenty' },
+        { n: 2, o: ['few','lot','lots of','a number'], c: 'a number' },
+        { n: 3, o: ['for','and','to','into'], c: 'and' },
+        { n: 4, o: ['since','before','until','for'], c: 'for' },
+        { n: 5, o: ['trip','travel','transport','route'], c: 'trip' },
+        { n: 6, o: ['bigger','longer','taller','higher'], c: 'longer' },
+        { n: 7, o: ['leave','depart','start','open'], c: 'start' },
+        { n: 8, o: ['fancy','want','hope','plan'], c: 'fancy' },
+        { n: 9, o: ['costs','fees','fares','charges'], c: 'fares' },
+        { n: 10, o: ['scene','scenery','landscape','view'], c: 'view' }
+      ],
+      weather: [
+        { n: 1, o: ['predict','know','tell','say'], c: 'predict' },
+        { n: 2, o: ['marks','notices','signs','alarms'], c: 'signs' },
+        { n: 3, o: ['last','following','later','other'], c: 'following' },
+        { n: 4, o: ['sent','shared','allowed','provided'], c: 'provided' },
+        { n: 5, o: ['possible','likely','impossible','able'], c: 'likely' },
+        { n: 6, o: ['however','although','but','despite'], c: 'however' },
+        { n: 7, o: ['accurate','close','true','near'], c: 'accurate' },
+        { n: 8, o: ['luck','chance','opportunity','result'], c: 'chance' },
+        { n: 9, o: ['reaching','getting','going','approaching'], c: 'approaching' },
+        { n: 10, o: ['bring','fetch','wear','take'], c: 'take' }
+      ]
+    };
+
+    // W1 Transformations
+    const w1Data = [
+      { id: 'w1_1', s1: "Last week, someone sent Beth an advertisement for a new website.", s2: "Last week, Beth ____________________ an advertisement for a new website.", ans: ["was sent"], hint: "Câu bị động quá khứ đơn (was sent)" },
+      { id: 'w1_2', s1: "The website had a sale, so Beth bought a dress.", s2: "There ____________________ on the website, so Beth bought a dress.", ans: ["was a sale"], hint: "There was a sale" },
+      { id: 'w1_3', s1: "The dress was too short for Beth.", s2: "The dress wasn't ____________________ for Beth.", ans: ["long enough"], hint: "too short -> not long enough" },
+      { id: 'w1_4', s1: "The dress was less colourful than the picture on the website.", s2: "The dress wasn't ____________________ the picture on the website.", ans: ["as colourful as", "so colourful as"], hint: "so sánh bằng phủ định (as colourful as)" },
+      { id: 'w1_5', s1: "Her friend suggested asking for her money back.", s2: "Her friend said, '____________________ ask for your money back.'", ans: ["why don't you"], hint: "gợi ý trực tiếp (Why don't you)" },
+      { id: 'w1_6', s1: "I first met Chris and his brother Karl five years ago.", s2: "I have known Chris and his brother Karl ____________________ years.", ans: ["for five"], hint: "hiện tại hoàn thành + for five years" },
+      { id: 'w1_7', s1: "Chris always wants to go out and meet new people.", s2: "Chris is always ____________________ go out and meet new people.", ans: ["keen to"], hint: "keen to + V" },
+      { id: 'w1_8', s1: "He really doesn't like to spend time alone.", s2: "He can't ____________________ time alone.", ans: ["stand spending", "bear spending"], hint: "can't stand + V-ing" },
+      { id: 'w1_9', s1: "Karl is different to Chris.", s2: "Karl isn't ____________________ as Chris.", ans: ["the same"], hint: "the same as" },
+      { id: 'w1_10', s1: "He isn't as sociable as his brother.", s2: "He's ____________________ than his brother.", ans: ["less sociable"], hint: "less sociable than" },
+      { id: 'w1_11', s1: "August is hotter than the other months of the year.", s2: "August is ____________________ month of the year.", ans: ["the hottest"], hint: "so sánh nhất (the hottest)" },
+      { id: 'w1_12', s1: "My Spanish friend said, 'You shouldn't stay in the hot sun for too long.'", s2: "My Spanish friend advised me ____________________ stay in the hot sun for too long.", ans: ["not to"], hint: "advise someone not to do sth" },
+      { id: 'w1_13', s1: "I prefer staying in the shade when it's very hot.", s2: "I'd rather ____________________ in the shade when it's very hot.", ans: ["stay"], hint: "would rather + V nguyên thể" },
+      { id: 'w1_14', s1: "Most years, there is too little rain in the south of the country.", s2: "Most years, there isn't ____________________ in the south of the country.", ans: ["enough rain"], hint: "not enough rain" },
+      { id: 'w1_15', s1: "The government encourages people to use water carefully.", s2: "People ____________________ to use water carefully by the government.", ans: ["are encouraged"], hint: "bị động hiện tại đơn (are encouraged)" }
+    ];
+
+    // APPLICATION STATE
+    let currentMode = 'practice';
+    let userAnswers = {};
+    let timer = null;
+    let timeRemaining = 60 * 60;
+
+    // INIT
+    window.addEventListener('DOMContentLoaded', () => {
+      renderR1();
+      renderR2();
+      renderR3();
+      renderR4();
+      renderR5();
+      renderW1();
+      updateScore();
+    });
+
+    function setMode(m) {
+      currentMode = m;
+      const bP = document.getElementById('btnModePractice');
+      const bE = document.getElementById('btnModeExam');
+      const timerBadge = document.getElementById('examTimer');
+      const submitBtn = document.getElementById('btnSubmitExam');
+
+      if (m === 'exam') {
+        bE.className = "px-3 py-1.5 rounded-lg font-semibold bg-rose-600 text-white transition shadow";
+        bP.className = "px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white transition";
+        timerBadge.classList.remove('hidden');
+        timerBadge.classList.add('flex');
+        submitBtn.classList.remove('hidden');
+        startTimer();
+      } else {
+        bP.className = "px-3 py-1.5 rounded-lg font-semibold bg-indigo-600 text-white transition shadow";
+        bE.className = "px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white transition";
+        timerBadge.classList.add('hidden');
+        timerBadge.classList.remove('flex');
+        submitBtn.classList.add('hidden');
+        clearInterval(timer);
+      }
+      refreshAllViews();
+    }
+
+    function startTimer() {
+      clearInterval(timer);
+      timeRemaining = 60 * 60;
+      timer = setInterval(() => {
+        timeRemaining--;
+        const m = Math.floor(timeRemaining / 60);
+        const s = timeRemaining % 60;
+        document.getElementById('timerVal').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        if (timeRemaining <= 0) {
+          clearInterval(timer);
+          alert('Hết giờ làm bài thi!');
+          submitExam();
+        }
+      }, 1000);
+    }
+
+    function switchTab(id) {
+      document.querySelectorAll('.pane-content').forEach(p => p.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.className = "tab-btn px-3 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition";
+      });
+      document.getElementById(`pane-${id}`).classList.remove('hidden');
+      document.getElementById(`tab-${id}`).className = "tab-btn px-3 py-1.5 rounded-lg font-bold bg-indigo-600 text-white shadow";
+    }
+
+    // RENDER LOGIC
+    function renderR1() {
+      document.getElementById('r1Container').innerHTML = r1Data.map(item => {
+        const ans = userAnswers[item.id];
+        const isCorrect = ans === item.c;
+        return `
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+            <span class="text-[10px] font-bold text-indigo-600 uppercase tracking-wide">${item.title}</span>
+            <div class="bg-amber-50/60 p-3 rounded-lg border border-amber-200/60 font-medium text-xs text-slate-800 whitespace-pre-line">${item.text}</div>
+            <p class="font-bold text-xs text-slate-900">${item.q}</p>
+            <div class="space-y-1.5">
+              ${item.opts.map(o => `
+                <button onclick="handleSelect('${item.id}', '${o.k}')" class="w-full text-left p-2 rounded-lg border text-xs flex items-center gap-2 transition ${ans === o.k ? (currentMode === 'practice' ? (isCorrect ? 'bg-emerald-100 border-emerald-500 font-bold text-emerald-900' : 'bg-rose-100 border-rose-500 font-bold text-rose-900') : 'bg-indigo-600 text-white font-bold') : 'bg-slate-50 hover:bg-slate-100 text-slate-700'}">
+                  <span class="w-5 h-5 rounded flex items-center justify-center font-bold text-[11px] bg-white border">${o.k}</span>
+                  <span class="flex-1">${o.t}</span>
+                </button>
+              `).join('')}
+            </div>
+            ${currentMode === 'practice' && ans ? `
+              <div class="text-[11px] pt-2 border-t ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">
+                <strong>${isCorrect ? '✓ Đúng' : '✕ Sai (Đáp án: ' + item.c + ')'}:</strong> ${item.exp}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderR2() {
+      r2Units.forEach(u => {
+        // People
+        document.getElementById(`r2PeopleContainer${u.id}`).innerHTML = u.people.map(p => {
+          const ans = userAnswers[p.id];
+          const isCorrect = ans === p.c;
+          return `
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-xs text-indigo-700">👤 ${p.n}</span>
+                <select onchange="handleSelect('${p.id}', this.value)" class="text-xs font-bold border rounded px-2 py-1 bg-white">
+                  <option value="">-- Lựa chọn --</option>
+                  ${['A','B','C','D','E','F','G','H'].map(l => `<option value="${l}" ${ans === l ? 'selected' : ''}>Lớp/Mục ${l}</option>`).join('')}
+                </select>
+              </div>
+              <p class="text-xs text-slate-600">${p.d}</p>
+              ${currentMode === 'practice' && ans ? `
+                <div class="text-[11px] font-medium pt-1 ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">
+                  ${isCorrect ? '✓ Hoàn hảo' : '✕ Đáp án đúng: ' + p.c} (${p.exp})
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }).join('');
+        // Classes
+        document.getElementById(`r2ClassesContainer${u.id}`).innerHTML = u.classes.map(c => `
+          <div class="p-2.5 bg-slate-50/70 rounded-lg border text-xs">
+            <strong class="text-indigo-600">${c.k}:</strong> ${c.t}
+          </div>
+        `).join('');
+      });
+    }
+
+    function renderR3() {
+      function makeR3(data, containerId) {
+        document.getElementById(containerId).innerHTML = data.map(item => {
+          const ans = userAnswers[item.id];
+          const isCorrect = ans === item.c;
+          return `
+            <div class="p-3 bg-slate-50/70 rounded-xl border text-xs space-y-2">
+              <p class="font-semibold text-slate-800">${item.t}</p>
+              <div class="flex items-center justify-between">
+                <div class="flex gap-2">
+                  <button onclick="handleSelect('${item.id}', 'A')" class="px-3 py-1 rounded border text-xs font-bold ${ans === 'A' ? (currentMode === 'practice' ? (item.c === 'A' ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white') : 'bg-indigo-600 text-white') : 'bg-white text-slate-700'}">A (Đúng)</button>
+                  <button onclick="handleSelect('${item.id}', 'B')" class="px-3 py-1 rounded border text-xs font-bold ${ans === 'B' ? (currentMode === 'practice' ? (item.c === 'B' ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white') : 'bg-indigo-600 text-white') : 'bg-white text-slate-700'}">B (Sai)</button>
+                </div>
+                ${currentMode === 'practice' && ans ? `
+                  <span class="text-[11px] font-bold ${isCorrect ? 'text-emerald-600' : 'text-rose-600'}">${isCorrect ? '✓ Đúng' : '✕ Sai (Đáp án: ' + item.c + ')'}</span>
+                ` : ''}
+              </div>
+              ${currentMode === 'practice' && ans ? `<div class="text-[11px] text-slate-500 italic">${item.exp}</div>` : ''}
+            </div>
+          `;
+        }).join('');
+      }
+      makeR3(r3Data1, 'r3Questions1');
+      makeR3(r3Data2, 'r3Questions2');
+    }
+
+    function renderR4() {
+      function renderR4Group(items, containerId) {
+        document.getElementById(containerId).innerHTML = items.map(q => {
+          const ans = userAnswers[q.id];
+          const isCorrect = ans === q.c;
+          return `
+            <div class="p-3 bg-slate-50/70 rounded-xl border space-y-2">
+              <p class="font-bold text-xs text-slate-900">${q.q}</p>
+              <div class="space-y-1">
+                ${q.opts.map(o => `
+                  <button onclick="handleSelect('${q.id}', '${o.k}')" class="w-full text-left p-2 rounded border text-xs flex items-center gap-2 ${ans === o.k ? (currentMode === 'practice' ? (isCorrect ? 'bg-emerald-100 border-emerald-500 font-bold' : 'bg-rose-100 border-rose-500 font-bold') : 'bg-indigo-600 text-white font-bold') : 'bg-white hover:bg-slate-100 text-slate-700'}">
+                    <span class="font-bold">${o.k}.</span> <span>${o.t}</span>
+                  </button>
+                `).join('')}
+              </div>
+              ${currentMode === 'practice' && ans ? `<div class="text-[11px] pt-1 ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}"><strong>${isCorrect ? '✓ Đúng' : '✕ Sai'}:</strong> ${q.exp}</div>` : ''}
+            </div>
+          `;
+        }).join('');
+      }
+      renderR4Group(r4Data.slice(0, 5), 'r4Passage1Container');
+      renderR4Group(r4Data.slice(5, 10), 'r4Passage2Container');
+      renderR4Group(r4Data.slice(10, 15), 'r4Passage3Container');
+    }
+
+    function renderR5() {
+      function renderR5Group(items, keyPrefix, containerId) {
+        document.getElementById(containerId).innerHTML = items.map(it => {
+          const qId = `${keyPrefix}_${it.n}`;
+          const ans = userAnswers[qId];
+          const isCorrect = ans === it.c;
+          return `
+            <div class="p-2.5 bg-slate-50 rounded-lg border text-xs space-y-1.5">
+              <span class="font-bold text-indigo-700">(${it.n})</span>
+              <div class="grid grid-cols-2 gap-1">
+                ${it.o.map(opt => `
+                  <button onclick="handleSelect('${qId}', '${opt}')" class="p-1 rounded border text-[11px] ${ans === opt ? (currentMode === 'practice' ? (isCorrect ? 'bg-emerald-600 text-white font-bold' : 'bg-rose-600 text-white font-bold') : 'bg-indigo-600 text-white') : 'bg-white text-slate-700'}">
+                    ${opt}
+                  </button>
+                `).join('')}
+              </div>
+              ${currentMode === 'practice' && ans ? `<div class="text-[10px] font-bold ${isCorrect ? 'text-emerald-600' : 'text-rose-600'}">${isCorrect ? '✓ Đúng' : '✕: ' + it.c}</div>` : ''}
+            </div>
+          `;
+        }).join('');
+      }
+      renderR5Group(r5Data.emma, 'r5_emma', 'r5EmmaContainer');
+      renderR5Group(r5Data.glasgow, 'r5_gla', 'r5GlasgowContainer');
+      renderR5Group(r5Data.weather, 'r5_wea', 'r5WeatherContainer');
+    }
+
+    function renderW1() {
+      document.getElementById('w1Container').innerHTML = w1Data.map(w => {
+        const val = (userAnswers[w.id] || '').trim();
+        const isAns = val.length > 0;
+        const isCorrect = w.ans.some(a => a.toLowerCase() === val.toLowerCase());
+        return `
+          <div class="p-4 bg-white rounded-xl border border-slate-200 shadow-sm space-y-2 text-xs">
+            <div class="text-slate-500 font-medium">1. ${w.s1}</div>
+            <div class="text-slate-900 font-bold">2. ${w.s2}</div>
+            <div class="flex gap-2 pt-1">
+              <input type="text" value="${val}" id="input_${w.id}" placeholder="Điền 1 - 3 từ..." class="flex-1 border border-slate-300 rounded-lg px-2.5 py-1 text-xs focus:ring-2 focus:ring-indigo-500" />
+              <button onclick="checkW1('${w.id}')" class="px-3 py-1 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-500">Lưu</button>
+            </div>
+            ${isAns ? `
+              <div class="text-[11px] ${isCorrect ? 'text-emerald-700 font-bold' : 'text-rose-700 font-bold'}">
+                ${isCorrect ? '✓ Hoàn toàn chính xác!' : `✕ Đáp án chuẩn: "${w.ans[0]}" (${w.hint})`}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function checkW1(id) {
+      const val = document.getElementById(`input_${id}`).value;
+      userAnswers[id] = val;
+      renderW1();
+      updateScore();
+    }
+
+    function handleSelect(id, val) {
+      userAnswers[id] = val;
+      refreshAllViews();
+      updateScore();
+    }
+
+    function refreshAllViews() {
+      renderR1();
+      renderR2();
+      renderR3();
+      renderR4();
+      renderR5();
+      renderW1();
+    }
+
+    function updateScore() {
+      let correct = 0;
+      let total = 0;
+
+      // R1 (15)
+      r1Data.forEach(d => { total++; if(userAnswers[d.id] === d.c) correct++; });
+      // R2 (15)
+      r2Units.forEach(u => u.people.forEach(p => { total++; if(userAnswers[p.id] === p.c) correct++; }));
+      // R3 (20)
+      [...r3Data1, ...r3Data2].forEach(d => { total++; if(userAnswers[d.id] === d.c) correct++; });
+      // R4 (15)
+      r4Data.forEach(d => { total++; if(userAnswers[d.id] === d.c) correct++; });
+      // R5 (30)
+      Object.entries(r5Data).forEach(([prefix, arr]) => {
+        const pTag = prefix === 'emma' ? 'r5_emma' : (prefix === 'glasgow' ? 'r5_gla' : 'r5_wea');
+        arr.forEach(it => { total++; if(userAnswers[`${pTag}_${it.n}`] === it.c) correct++; });
+      });
+      // W1 (15)
+      w1Data.forEach(w => {
+        total++;
+        const val = (userAnswers[w.id] || '').trim().toLowerCase();
+        if (w.ans.some(a => a.toLowerCase() === val)) correct++;
+      });
+
+      document.getElementById('scoreBadge').innerText = `${correct} / ${total}`;
+    }
+
+    function submitExam() {
+      clearInterval(timer);
+      setMode('practice');
+      alert('Đã nộp bài! Đang chuyển về chế độ Tự học để bạn xem lại toàn bộ giải thích chi tiết.');
+    }
+
+    function resetAll() {
+      if(confirm('Bạn có muốn xóa toàn bộ câu trả lời và làm lại không?')) {
+        userAnswers = {};
+        refreshAllViews();
+        updateScore();
+      }
+    }
+  </script>
+</body>
+</html>
